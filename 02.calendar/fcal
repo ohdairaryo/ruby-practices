@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+#メソッド呼び出し
+require "date"
+require "optparse"
+
+#変数
+year = Date.today.year
+mon = Date.today.mon
+week = %w(日 月 火 水 木 金 土)
+firstday_wday = Date.new(year,mon,1).wday
+lastday_date = Date.new(year,mon,-1).day
+
+#オプションの設定
+option = {}
+OptionParser.new do |opt|
+  opt.on('-m value') {|n| option[:m] = n}
+  opt.on('-y value') {|n| option[:y] = n}
+  opt.parse!(ARGV)
+end
+
+if option[:y]
+  ye  = option[:y].to_i
+else
+  ye  = Date.today.year
+end
+
+if option[:m]
+  month = option[:m].to_i
+else
+  month = Date.today.mon
+end
+
+#カレンダーの上部
+puts "#{month}月 #{ye}年".center(20)
+puts week.join(" ")
+print "   " * firstday_wday
+
+#カレンダーの下部
+#1~最終日まで繰り返し
+#土曜日まで表示したら改行
+wday = firstday_wday
+(1..lastday_date).each do |date|    
+  print date.to_s.rjust(2) + " "
+  wday = wday+1
+  if wday%7==0                     
+    print "\n"
+  end
+end
+
+if wday%7!=0
+  print "\n"
+end
+
